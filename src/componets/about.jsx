@@ -2,8 +2,8 @@ import React from 'react';
 
 
 const About = () => (
-    <section className="about-section">
-        {/* <img src="" alt="About Header" className="about-header-image" /> */}
+    <section className="about">
+        <img src="null" alt="this will be an imported image of the word ABOUT" />
         <p>
             Welcome to our website! We are dedicated to providing the best service and information to our users. Learn more about our mission and values here.
         </p>
