@@ -3,14 +3,13 @@ import React, { useRef, useState } from "react";
 
 const Contact = () => {
     const form = useRef();
-    const [status, setStatus] = useState("");
 
 
 
     return (
-        <div>
+        <div className="Contact">
             <h2>Contact Us</h2>
-            <form ref={form} >
+            <form ref={form} className="Form">
                 <div>
                     <label>Email:</label>
                     <input type="email" name="user_email" required />
@@ -21,7 +20,7 @@ const Contact = () => {
                 </div>
                 <button type="submit">Send</button>
             </form>
-            {status && <p>{status}</p>}
+            
         </div>
     );
 };
