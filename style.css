@@ -33,6 +33,10 @@ body {
   font-size: 1rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  /* Full-bleed lines use 100vw, which can exceed the visible width by the
+     scrollbar's width on desktop. "clip" prevents sideways scrolling
+     without breaking the sticky header. */
+  overflow-x: clip;
 }
 
 img { max-width: 100%; display: block; }
@@ -44,8 +48,9 @@ h1, h2, h3, h4, p { margin: 0; }
   font-family: var(--font-display);
   font-weight: 400;
   text-transform: uppercase;
-  line-height: 0.92;
-  letter-spacing: 0.005em;
+  line-height: 1;
+  letter-spacing: 0.02em;   /* was 0.005em: a little more room between letters */
+  word-spacing: 0.2em;      /* FIX 1: keeps the comma in "HI," from touching the next word */
   font-size: clamp(3.5rem, 11vw, 10rem);
 }
 .display-xl { font-size: clamp(3.5rem, 12vw, 11rem); }
@@ -175,19 +180,45 @@ h1, h2, h3, h4, p { margin: 0; }
   justify-content: center;
   margin-bottom: clamp(1rem, 3vw, 2rem);
 }
+
+/* FIX 2: the accent lines are drawn with pseudo-elements that are as wide as
+   the viewport and centered on the page, so they reach both screen edges on
+   phones and on desktop, no matter how narrow the hero content is. */
 .meta-row {
+  position: relative;
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 0;
-  border-top: 1px solid var(--line);
   font-size: 0.65rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.hero .display {
-  padding: clamp(0.5rem, 2vw, 1.5rem) 0;
-  border-bottom: 1px solid var(--line);
+.meta-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: calc(100vw - 10rem);
+  transform: translateX(-50%);
+  border-top: 1px solid var(--line);
+  pointer-events: none;
 }
+
+.hero .display {
+  position: relative;
+  padding: clamp(0.5rem, 2vw, 1.5rem) 0;
+}
+.hero .display::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: calc(100vw - 10rem);
+  transform: translateX(-50%);
+  border-bottom: 1px solid var(--line);
+  pointer-events: none;
+}
+
 .hero-copy {
   display: flex;
   flex-direction: column;
@@ -388,6 +419,19 @@ h1, h2, h3, h4, p { margin: 0; }
   background: radial-gradient(circle at 30% 30%, #f2561d, #111 75%);
   border: 2px solid var(--ink);
   opacity: 0.95;
+}
+
+/* FIX 3: on laptops/desktops the circle sits fully inside the screen,
+   lined up with the right edge of the page content (the same gutter the
+   rest of the site uses). On very wide screens it follows the 1400px
+   content column instead of drifting to the far edge. Phones keep the
+   original look above. */
+@media (min-width: 900px) {
+  .contact-circle {
+    right: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
+    width: clamp(260px, 30vw, 440px);
+    opacity: 1;
+  }
 }
 
 /* ==========================================================
